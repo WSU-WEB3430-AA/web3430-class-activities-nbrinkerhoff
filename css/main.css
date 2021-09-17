@@ -1,0 +1,15 @@
+:root body {
+  background-color: lightcyan;
+}
+
+:root h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  margin-left: 1rem;
+  color: navy;
+}
+
+:root h1 .subtitle {
+  font-size: .8em;
+  color: gray;
+}
+/*# sourceMappingURL=main.css.map */
