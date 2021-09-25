@@ -7,16 +7,29 @@ require.context('../stylesheets/', true, /\.(css|scss)$/i)
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {movies} from './movies'
-import { MovieList } from './components/movie-list'
+import App from './components/App'
 
-class Main extends React.Component {
-  render() {
-    return <MovieList movies= {movies} />
+
+export default function StarRating({totalStars = 5}) {
+    // const movieRating = (MovieList.rating)/2
+    const Star = ({ selected = false }) => (
+        <FaStar color={selected ? "maroon" : "grey"} />
+    );
+    const createArray = length => [...Array(length)];
+    const [selectedStars] = useState(4);
+    return (
+      <>
+        {createArray(totalStars).map((_n, i) => (
+          <Star key={i} selected={selectedStars > i} />
+        ))}
+        <p>
+          {selectedStars} of {totalStars} stars
+        </p>
+      </>
+    );
   }
-}
 
 
 
 
-ReactDOM.render(<Main/>, document.getElementById('main'))
+ReactDOM.render(<App/>, document.getElementById('main'))
