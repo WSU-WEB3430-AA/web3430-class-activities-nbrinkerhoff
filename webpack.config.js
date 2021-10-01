@@ -13,12 +13,14 @@ module.exports = {
     historyApiFallback: true,
     open: true,
     compress: true,
-    port: 8080
+    port: 8080,
+    historyApiFallback: true
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'javascripts/[name].js',
     // clean: true // Webpack 5
+    publicPath: '/'
   },
   module: {
     rules: [
