@@ -1,16 +1,50 @@
-import React, { useState, createContext } from "react"
-import Movie from "./Movie"
-import { top10 } from "../top10"
-import StarRating from "./StarRating"
-import { Switch, Route, Link, Redirect, useHistory } from "react-router-dom"
-import { About, ErrorNotFound } from "./Pages"
-import { MovieForm } from "./MovieForm"
+import React, { useState, createContext, useEffect } from "react";
+import Movie from "./Movie";
+import StarRating from "./StarRating";
+import { Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
+import { About, ErrorNotFound } from "./Pages";
+import { MovieForm } from "./MovieForm";
 
 
 export const MovieContext = createContext()
 export default function MovieList() {
-  const [movies, setMovies] = useState(top10)
+  const [movies, setMovies] = useState()
   const history = useHistory()
+
+  useEffect(() => {
+    fetch("/top10.dat")
+    .then(response => response.text())
+    .then((data) => {
+      setMovies(JSON.parse(data, (key, value) => {
+        const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:.*Z$/
+        //Explanation of the above string of... things...
+        // ^ = marks the beginning of the string
+        // \d{4}- = Look for a value that starts with 4 digits for the year
+        // - = followed by a dash
+        // \d{2} = followed by 2 digits for the month
+        // - = followed by a dash
+        // \d{2} = followed by 2 digits for the day
+        // T = represents that the string will have a time component
+        // \d{2} = represents the hours
+        // : = separator for the time
+        // \d{2} = represents the minutes
+        // : = separator for the time
+        // .* = a couple of characters (.* means any character after that(?))
+        // Z = ends the datestring with a Z
+        // $ = marks the end of the datestring
+        if(typeof value === "string" && dateFormat.test(value)){ // && = AND
+          return new Date(value) // don't return the value itself. return a "date of it"
+        }
+        // Below is essentially a statement saying if it is not the case then do that.
+        return value
+      }))
+    })
+    .catch(console.error)
+    // Empty array below is put there in order to not constantly call the .dat file. making it consume less power and resources. It does this by essentially asking useEffect to use the fetch once.
+  }, [])
+
+  if(!movies)
+    return <p>Loading...</p>
     return(
       <MovieContext.Provider value={{movies, setMovies}}>  
         <nav>
